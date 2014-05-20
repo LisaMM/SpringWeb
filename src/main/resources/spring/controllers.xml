@@ -15,6 +15,9 @@
 	<mvc:resources mapping='/styles/**' location='/styles/*' />
 	<mvc:resources mapping='/scripts/**' location='/scripts/*' />
 	<mvc:view-controller path="/info" view-name="info"/>
+	<mvc:interceptors>
+		<bean class='org.springframework.web.servlet.i18n.LocaleChangeInterceptor'/>
+	</mvc:interceptors>
 	<bean class='org.springframework.web.servlet.view.InternalResourceViewResolver'>
 		<property name="prefix" value="/WEB-INF/JSP/"/>
 		<property name="suffix" value=".jsp"/>
