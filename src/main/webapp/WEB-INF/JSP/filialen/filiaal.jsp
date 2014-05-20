@@ -34,6 +34,17 @@
 							dateStyle="short" />
 					</dd>
 				</dl>
+				<c:url value="filialen/verwijderen" var="verwijderURL">
+					<c:param name="id" value="${filiaal.id}"/>
+				</c:url>
+				<form action="${verwijderURL}" method="post" id="verwijderform">
+					<input type="submit" value="verwijderen" id="verwijderknop">
+					<script>
+						document.getElementById('verwijderform').onsubmit = function() {
+							document.getElementById('verwijderknop').disabled=true;
+						};
+					</script>
+				</form>
 			</c:when>
 			<c:otherwise>
 				<div>Filiaal niet gevonden</div>

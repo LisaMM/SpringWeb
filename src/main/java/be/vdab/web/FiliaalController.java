@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import be.vdab.entities.Filiaal;
 import be.vdab.services.FiliaalService;
 
 @Controller
@@ -41,5 +43,22 @@ class FiliaalController {
 	public ModelAndView read(@RequestParam long id) {
 		return new ModelAndView("filialen/filiaal", "filiaal", 
 			filiaalService.read(id));
+	}
+	
+	@RequestMapping(value = "verwijderen", method = RequestMethod.POST, params = "id")
+	public String delete(@RequestParam long id, RedirectAttributes redirectAttributes) {
+		Filiaal filiaal = filiaalService.read(id);
+		if (filiaal == null) {
+			return "redirect:/";
+		}
+		filiaalService.delete(id);
+		redirectAttributes.addAttribute("id", id);
+		redirectAttributes.addAttribute("naam", filiaal.getNaam());
+		return("redirect:/filialen/verwijderd");
+	}
+	
+	@RequestMapping(value = "verwijderd", method = RequestMethod.GET, params = {"id", "naam"})
+	public String deleted() {
+		return "filialen/verwijderd";
 	}
 }
