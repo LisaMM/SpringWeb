@@ -19,4 +19,11 @@
 		<property name="prefix" value="/WEB-INF/JSP/"/>
 		<property name="suffix" value=".jsp"/>
 	</bean>
+	<bean id="messageSource" class=
+	'org.springframework.context.support.ReloadableResourceBundleMessageSource'>
+		<property name='basename' value='classpath:/resourceBundles/teksten' />
+		<property name='fallbackToSystemLocale' value='false' />
+	</bean>
+	<bean id='localeResolver'
+		class='org.springframework.web.servlet.i18n.SessionLocaleResolver'/>
 </beans>
