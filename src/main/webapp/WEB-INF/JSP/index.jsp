@@ -4,7 +4,7 @@
 <!doctype html>
 <html lang='${pageContext.response.locale.language}'>
 	<head>
-		<title>Menu</title>
+		<title><fmt:message key='menu'/></title>
 		<link rel='stylesheet'
 			href='${pageContext.servletContext.contextPath}/styles/default.css'>
 	</head>
