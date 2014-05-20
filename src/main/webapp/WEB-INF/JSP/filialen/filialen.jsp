@@ -11,9 +11,9 @@
 		<a href="<c:url value='/'/>">Menu</a>
 		<h1>Filialen</h1>
 		<c:forEach items="${filialen}" var="filiaal">
-		<c:url var="url" value="/filialen">
-			<c:param name="id" value="${filiaal.id}"/>
-		</c:url>
+			<c:url var="url" value="/filialen">
+				<c:param name="id" value="${filiaal.id}"/>
+			</c:url>
 			<h2><a href='${url}'>${filiaal.naam}</a></h2>
 			<p>
 				${filiaal.adres.straat} ${filiaal.adres.huisNr}<br>

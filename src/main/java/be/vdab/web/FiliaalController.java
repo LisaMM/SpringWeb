@@ -36,4 +36,10 @@ class FiliaalController {
 		logger.info("filiaal record toevoegen aan database");
 		return "redirect:/";
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, params = "id")
+	public ModelAndView read(@RequestParam long id) {
+		return new ModelAndView("filialen/filiaal", "filiaal", 
+			filiaalService.read(id));
+	}
 }
