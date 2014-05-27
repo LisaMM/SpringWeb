@@ -1,18 +1,15 @@
 package be.vdab.web;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import be.vdab.constraints.Postcode;
 
 class VanTotPostcodeForm {
 	@NotNull
-	@Min(MIN_POSTCODE)
-	@Max(MAX_POSTCODE)
+	@Postcode
 	private Integer vanpostcode;
 	@NotNull
-	@Min(MIN_POSTCODE)
-	@Max(MAX_POSTCODE)
+	@Postcode
 	private Integer totpostcode;
-	private final static int MIN_POSTCODE = 1000;
-	private final static int MAX_POSTCODE = 9999;
 	
 	VanTotPostcodeForm() {}
 	
@@ -27,14 +24,6 @@ class VanTotPostcodeForm {
 	
 	public Integer getTotpostcode() {
 		return totpostcode;
-	}
-	
-	public void setVanpostcode(Integer vanpostcode) {
-		this.vanpostcode = vanpostcode;
-	}
-
-	public void setTotpostcode(Integer totpostcode) {
-		this.totpostcode = totpostcode;
 	}
 	
 	@Override

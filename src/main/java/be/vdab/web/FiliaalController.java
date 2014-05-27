@@ -86,5 +86,7 @@ class FiliaalController {
 	}
 	
 	@InitBinder("vanTotPostcodeForm")
-	public void initBinderVanTotPostcodeForm(DataBinder dataBinder) {}
+	public void initBinderVanTotPostcodeForm(DataBinder dataBinder) {
+		dataBinder.initDirectFieldAccess();
+	}
 }
