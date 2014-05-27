@@ -12,11 +12,16 @@
 		<h1>Filialen van tot postcode</h1>
 		<c:url value='/filialen' var='url'/>
 		<form:form action='${url}' method='get' commandName='vanTotPostcodeForm'>
-			<form:label path="vanpostcode">Van:</form:label>
+			<form:label path="vanpostcode">
+				Van: <form:errors path="vanpostcode" cssClass="fout"/>
+			</form:label>
 			<form:input path="vanpostcode" type="number" autofocus="autofocus"/>
-			<form:label path="totpostcode">Tot:</form:label>
+			<form:label path="totpostcode">
+				Tot: <form:errors path="totpostcode" cssClass="fout"/>
+			</form:label>
 			<form:input path="totpostcode" type="number" />
 			<input type="submit" value ="Zoeken"/>
+			<form:errors cssClass="fout" element="div"/>
 		</form:form>
 		<c:forEach items="${filialen}" var="filiaal">
 			<h2>${filiaal.naam}</h2>

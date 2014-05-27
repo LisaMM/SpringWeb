@@ -19,6 +19,9 @@
 				<li><a href="<c:url value='/filialen/toevoegen'/>">
 					<fmt:message key="filiaalToevoegen"/>
 				</a></li>
+				<li><a href="<c:url value='/filialen/vantotpostcode'/>">
+					<fmt:message key="filialenVanTotPostcode"/>
+				</a></li>
 				<li><a href="<c:url value='/werknemers'/>">
 					<fmt:message key="werknemers"/>
 				</a></li>

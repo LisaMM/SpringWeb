@@ -9,7 +9,7 @@
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd'>
-	<mvc:annotation-driven />
+	<mvc:annotation-driven validator="validator"/>
 	<context:component-scan base-package="be.vdab.web" />
 	<mvc:resources mapping='/images/**' location='/images/*' />
 	<mvc:resources mapping='/styles/**' location='/styles/*' />
@@ -30,5 +30,9 @@
 	<bean id='localeResolver'
 		class='org.springframework.web.servlet.i18n.CookieLocaleResolver'>
 		<property name='cookieMaxAge' value='604800'/> <!-- 604800 = 7 dagen -->
+	</bean>
+	<bean id="validator"
+		class='org.springframework.validation.beanvalidation.LocalValidatorFactoryBean'>
+		<property name="validationMessageSource" ref="messageSource"/>
 	</bean>
 </beans>
