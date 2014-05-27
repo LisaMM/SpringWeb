@@ -61,4 +61,10 @@ class FiliaalController {
 	public String deleted() {
 		return "filialen/verwijderd";
 	}
+	
+	@RequestMapping(value = "vantotpostcode", method = RequestMethod.GET)
+	public ModelAndView findByPostcodeForm() {
+		return new ModelAndView("filialen/vantotpostcode", 
+			"vanTotPostcodeForm", new VanTotPostcodeForm(1000, 9999));
+	}
 }
