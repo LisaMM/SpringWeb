@@ -4,20 +4,58 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
 import org.springframework.format.annotation.*;
 import org.springframework.format.annotation.NumberFormat.Style;
+
 import be.vdab.valueobjects.Adres;
 
 public class Filiaal implements Serializable {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((naam == null) ? 0 : naam.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Filiaal other = (Filiaal) obj;
+		if (naam == null) {
+			if (other.naam != null)
+				return false;
+		} else if (!naam.equals(other.naam))
+			return false;
+		return true;
+	}
+
 	private static final long serialVersionUID = 1L;
 	private long id;
+	@NotNull
+	@Size(min = 1, max = 50, message = "{Size.tekst}")
 	private String naam;
 	private boolean hoofdFiliaal;
 	@NumberFormat(style = Style.NUMBER)
+	@NotNull
+	@Min(0)
+	@Digits(integer = 10, fraction = 2)
 	private BigDecimal waardeGebouw;
 	@DateTimeFormat(style = "S-")
+	@NotNull
 	private Date inGebruikName;
+	@Valid
 	private Adres adres;
+	
+	public Filiaal() {}
 
 	public Filiaal(String naam, boolean hoofdFiliaal, BigDecimal waardeGebouw,
 			Date inGebruikName, Adres adres) {

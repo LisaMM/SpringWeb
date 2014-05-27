@@ -1,7 +1,6 @@
 package be.vdab.web;
 
 import javax.validation.Valid;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.*;
@@ -14,8 +13,6 @@ import be.vdab.services.FiliaalService;
 @Controller
 @RequestMapping("/filialen")
 class FiliaalController {
-	private final Logger logger = 
-		LoggerFactory.getLogger(FiliaalController.class);
 	private final FiliaalService filiaalService;
 	
 	@Autowired
@@ -30,14 +27,17 @@ class FiliaalController {
 	}
 	
 	@RequestMapping(value = "toevoegen", method = RequestMethod.GET)
-	public String createForm() {
-		return "filialen/toevoegen";
+	public ModelAndView createForm() {
+		return new ModelAndView("filialen/toevoegen", "filiaal", new Filiaal());
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String create() {
-		logger.info("filiaal record toevoegen aan database");
-		return "redirect:/";
+	public String create(@Valid Filiaal filiaal, BindingResult bindingResult) {
+		if (! bindingResult.hasErrors()) {
+			filiaalService.create(filiaal);
+			return "redirect:/";
+		}
+		return "filialen/toevoegen";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, params = "id")
@@ -88,5 +88,15 @@ class FiliaalController {
 	@InitBinder("vanTotPostcodeForm")
 	public void initBinderVanTotPostcodeForm(DataBinder dataBinder) {
 		dataBinder.initDirectFieldAccess();
+	}
+	
+	@InitBinder("filiaal")
+	public void initBinderFiliaal(DataBinder dataBinder) {
+		Filiaal filiaal = (Filiaal) dataBinder.getTarget();
+		if (filiaal.getAdres() == null) {
+			filiaal.setAdres(new AdresForm());
+		} else {
+			filiaal.setAdres(new AdresForm(filiaal.getAdres()));
+		}
 	}
 }
