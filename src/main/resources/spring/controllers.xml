@@ -35,4 +35,6 @@
 		class='org.springframework.validation.beanvalidation.LocalValidatorFactoryBean'>
 		<property name="validationMessageSource" ref="messageSource"/>
 	</bean>
+	<bean id='multipartResolver'
+		class='org.springframework.web.multipart.support.StandardServletMultipartResolver'/>
 </beans>
