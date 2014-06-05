@@ -1,11 +1,13 @@
 package be.vdab.dao;
 
-import java.math.BigDecimal;
-import java.text.*;
+import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import be.vdab.entities.Filiaal;
@@ -13,24 +15,25 @@ import be.vdab.valueobjects.Adres;
 
 @Repository
 class FiliaalDAOImpl implements FiliaalDAO {
-	private final Logger logger = LoggerFactory.getLogger(FiliaalDAOImpl.class);
 	private final Map<Long, Filiaal> filialen = new ConcurrentHashMap<>();
+	private final JdbcTemplate jdbcTemplate;
+	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private final FiliaalRowMapper filiaalRowMapper = new FiliaalRowMapper();
+	private static final String SQL_FIND_ALL =
+			"select id, naam, hoofdFiliaal, straat, huisNr, postcode, gemeente," +
+			"inGebruikName, waardeGebouw from filialen order by naam";
+	private static final String SQL_FIND_BY_POSTCODE =
+			"select id, naam, hoofdFiliaal, straat, huisNr, postcode, gemeente, " +
+			"inGebruikName, waardeGebouw from filialen" +
+			" where postcode between :van and :tot order by naam";
+	private static final String SQL_READ =
+			"select id, naam, hoofdFiliaal, straat, huisNr, postcode, gemeente," +
+			"inGebruikName, waardeGebouw from filialen where id = ?";
 
-	public FiliaalDAOImpl() {
-		try {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			filialen.put(1L, new Filiaal(1L, "Andros", true,
-				new BigDecimal(1000), dateFormat.parse("2009-01-31"), 
-				new Adres("Keizerslaan", "11", 1000, "Brussel")));
-			filialen.put(2L, new Filiaal(2L, "Delos", false, 
-				new BigDecimal(2000), dateFormat.parse("2009-02-28"), 
-				new Adres("Gasthuisstraat", "31", 1000, "Brussel")));
-			filialen.put(3L, new Filiaal(3L, "Gavdos", false, 
-				new BigDecimal(3000), dateFormat.parse("2009-03-31"), 
-				new Adres("Koestraat", "44", 9700, "Oudenaarde")));
-		} catch (ParseException ex) {
-			logger.error("Verkeerde datum ingebruikname");
-		}
+	@Autowired
+	public FiliaalDAOImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	@Override
@@ -43,7 +46,11 @@ class FiliaalDAOImpl implements FiliaalDAO {
 
 	@Override
 	public Filiaal read(long id) {
-		return filialen.get(id);
+		try {
+			return jdbcTemplate.queryForObject(SQL_READ, filiaalRowMapper, id);
+		} catch (IncorrectResultSizeDataAccessException ex) {
+			return null; //record niet gevonden
+		}
 	}
 
 	@Override
@@ -58,19 +65,16 @@ class FiliaalDAOImpl implements FiliaalDAO {
 
 	@Override
 	public Iterable<Filiaal> findAll() {
-		return filialen.values();
+		return jdbcTemplate.query(SQL_FIND_ALL, filiaalRowMapper);
 	}
 
 	@Override
 	public Iterable<Filiaal> findByPostcodeBetween(int van, int tot) {
-		List<Filiaal> vanTotFilialen = new ArrayList<>();
-		for (Filiaal filiaal : filialen.values()) {
-			int postcode = filiaal.getAdres().getPostcode();
-			if (postcode >= van && postcode <= tot) {
-				vanTotFilialen.add(filiaal);
-			}
-		}
-		return vanTotFilialen;
+		Map<String, Integer> parameters = new HashMap<>();
+		parameters.put("van", van);
+		parameters.put("tot", tot);
+		return namedParameterJdbcTemplate.query(
+				SQL_FIND_BY_POSTCODE, parameters, filiaalRowMapper);
 	}
 
 	@Override
@@ -78,4 +82,21 @@ class FiliaalDAOImpl implements FiliaalDAO {
 		return filialen.size();
 	}
 
+	private static class FiliaalRowMapper implements RowMapper<Filiaal> {
+		@Override
+		public Filiaal mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+			return new Filiaal(
+					resultSet.getLong("id"), 
+					resultSet.getString("naam"),
+					resultSet.getBoolean("hoofdFiliaal"),
+					resultSet.getBigDecimal("waardeGebouw"),
+					resultSet.getDate("inGebruikName"),
+					new Adres(
+							resultSet.getString("straat"),
+							resultSet.getString("huisNr"),
+							resultSet.getInt("postcode"),
+							resultSet.getString("gemeente")));
+		}
+		
+	}
 }

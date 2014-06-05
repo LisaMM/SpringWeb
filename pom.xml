@@ -9,6 +9,11 @@
 		<spring.version>[3.2, 3.2.99]</spring.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 		<dependency> <!-- gebruik servlets -->
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
