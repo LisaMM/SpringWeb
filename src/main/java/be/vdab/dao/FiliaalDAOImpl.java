@@ -34,12 +34,14 @@ class FiliaalDAOImpl implements FiliaalDAO {
 	private static final String SQL_FIND_BY_NAAM =
 			"select id, naam, hoofdFiliaal, straat, huisNr, postcode, gemeente," +
 			"inGebruikName, waardeGebouw from filialen where naam = :naam";
-	private static final String SQL_DELETE = "delete from filialen where id = ?";
+	private static final String SQL_DELETE = "delete from filialen where id = :id";
 	private static final String SQL_FIND_AANTAL_WERKNEMERS =
 			"select count(*) from werknemers where filiaalId = ?";
 	private static final String SQL_UPDATE =
-			"update filialen set naam=?, hoofdFiliaal=?, straat=?, huisNr=?," +
-			"postcode=?, gemeente=?, inGebruikName=?, waardeGebouw=? where id=?";
+			"update filialen set naam=:naam, hoofdFiliaal = :hoofdFiliaal," +
+			"straat = :straat, huisNr = :huisNr, postcode = :postcode, " +
+			"gemeente = :gemeente, inGebruikName = :inGebruikName," +
+			"waardeGebouw = :waardeGebouw where id = :id";
 
 	@Autowired
 	public FiliaalDAOImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -78,16 +80,24 @@ class FiliaalDAOImpl implements FiliaalDAO {
 
 	@Override
 	public void update(Filiaal filiaal) {
-		jdbcTemplate.update(SQL_UPDATE, filiaal.getNaam(), filiaal.isHoofdFiliaal(),
-				filiaal.getAdres().getStraat(), filiaal.getAdres().getHuisNr(),
-				filiaal.getAdres().getPostcode(),
-				filiaal.getAdres().getGemeente(), filiaal.getInGebruikName(),
-				filiaal.getWaardeGebouw(), filiaal.getId());
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("id", filiaal.getId());
+		parameters.put("naam", filiaal.getNaam());
+		parameters.put("hoofdFiliaal", filiaal.isHoofdFiliaal());
+		parameters.put("straat", filiaal.getAdres().getStraat());
+		parameters.put("huisNr", filiaal.getAdres().getHuisNr());
+		parameters.put("postcode", filiaal.getAdres().getPostcode());
+		parameters.put("gemeente", filiaal.getAdres().getGemeente());
+		parameters.put("inGebruikName", filiaal.getInGebruikName());
+		parameters.put("waardeGebouw", filiaal.getWaardeGebouw());
+		namedParameterJdbcTemplate.update(SQL_UPDATE, parameters);
 	}
 
 	@Override
 	public void delete(long id) {
-		jdbcTemplate.update(SQL_DELETE, id);
+		namedParameterJdbcTemplate.update(SQL_DELETE, Collections.singletonMap("id", id));
+			// de method singletonMap geeft je een Map met één entry
+			// de key van die entry is de eerste parameter, de value is de tweede param.
 	}
 
 	@Override
