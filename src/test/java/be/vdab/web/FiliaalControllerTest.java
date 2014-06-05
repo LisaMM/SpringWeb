@@ -3,6 +3,8 @@ package be.vdab.web;
 import java.math.BigDecimal;
 import java.util.*;
 
+import javax.servlet.ServletContext;
+
 import org.junit.*;
 import org.mockito.Mockito;
 
@@ -15,13 +17,16 @@ public class FiliaalControllerTest {
 	private Iterable<Filiaal> filialen;
 	private FiliaalService filiaalService;
 	private Filiaal filiaal;
+	private ServletContext servletContext;
 
 	@Before
 	public void setUp() {
+		servletContext = Mockito.mock(ServletContext.class);
+		Mockito.when(servletContext.getRealPath("/images")).thenReturn("");
 		filialen = Collections.emptyList();
 		filiaalService = Mockito.mock(FiliaalService.class);
 		Mockito.when(filiaalService.findAll()).thenReturn(filialen);
-		filiaalController = new FiliaalController(filiaalService, null);
+		filiaalController = new FiliaalController(filiaalService, servletContext);
 		filiaal = new Filiaal("naam1", true, BigDecimal.ONE, new Date(),
 				new Adres("straat1", "huisnr1", 1, "gemeente1"));
 		Mockito.when(filiaalService.read(1L)).thenReturn(filiaal);
