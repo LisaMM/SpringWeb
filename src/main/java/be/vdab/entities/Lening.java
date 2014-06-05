@@ -2,7 +2,7 @@ package be.vdab.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.*;
 
 import javax.validation.constraints.*;
 
@@ -32,14 +32,26 @@ public class Lening implements Serializable {
 	@NotNull(groups = Stap2.class)
 	@Min(value = 1, groups = Stap2.class)
 	private Integer aantalMaanden;
+	private List<String> telefoonNrs = new ArrayList<>();
+	private Map<Long, Integer> aantalPersonenTenLastePerJaar = new LinkedHashMap<>();
+	private final static int AANTAL_JAREN = 3;
 	
 	public Lening() {
 		beginDatum = new Date();
+		telefoonNrs.add("");
+		long jaar = Calendar.getInstance().get(Calendar.YEAR) - AANTAL_JAREN;
+		for (int i = 0; i != AANTAL_JAREN; i++) {
+			aantalPersonenTenLastePerJaar.put(jaar++, 0);
+		}
 	}
 	
 	@Override
 	public String toString() {
 		return voornaam + " " + familienaam + " : " + doel;
+	}
+	
+	public void nogEenTelefoonNr() {
+		telefoonNrs.add("");
 	}
 
 	public String getVoornaam() {
@@ -88,5 +100,22 @@ public class Lening implements Serializable {
 
 	public void setAantalMaanden(Integer aantalMaanden) {
 		this.aantalMaanden = aantalMaanden;
+	}
+
+	public List<String> getTelefoonNrs() {
+		return telefoonNrs;
+	}
+
+	public void setTelefoonNrs(ArrayList<String> telefoonNrs) {
+		this.telefoonNrs = telefoonNrs;
+	}
+
+	public Map<Long, Integer> getAantalPersonenTenLastePerJaar() {
+		return aantalPersonenTenLastePerJaar;
+	}
+
+	public void setAantalPersonenTenLastePerJaar(
+			Map<Long, Integer> aantalPersonenTenLastePerJaar) {
+		this.aantalPersonenTenLastePerJaar = aantalPersonenTenLastePerJaar;
 	}
 }

@@ -44,4 +44,10 @@ class LeningController {
 			return "redirect:/";
 		}
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, params = "nogeennummer")
+	public String nogEenNummer(@ModelAttribute Lening lening) {
+		lening.nogEenTelefoonNr();
+		return "leningen/toevoegen1";
+	}
 }

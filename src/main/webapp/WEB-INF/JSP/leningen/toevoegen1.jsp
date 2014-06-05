@@ -23,6 +23,22 @@
 			<form:label path="doel">Doel van de lening:
 			<form:errors path="doel" cssClass="fout"/></form:label>
 			<form:input path="doel" size="100"/>
+			<div>Telefoonnr(s). waar u bereikbaar bent:</div>
+			<c:forEach items="${lening.telefoonNrs}" varStatus="status">
+				<div class="rij">
+					<form:input path="telefoonNrs[${status.index}]" type="tel"/>
+					<form:errors path="telefoonNrs[${status.index}]" cssClass="fout"/>
+				</div>
+			</c:forEach>
+			<input type="submit" value="Nog een telefoonnummer" name="nogeennummer">
+			<div>Aantal personen ten laste van de voorbije jaren:</div>
+			<c:forEach items='${lening.aantalPersonenTenLastePerJaar}' var='entry'>
+				<div class='rij'>
+					<form:label path='aantalPersonenTenLastePerJaar[${entry.key}]'>${entry.key}:</form:label>
+					<form:input path='aantalPersonenTenLastePerJaar[${entry.key}]' type='number'/>
+					<form:errors path='aantalPersonenTenLastePerJaar[${entry.key}]' cssClass='fout'/>
+				</div>
+			</c:forEach>
 			<input type='submit' value='Volgende stap' name='van1naar2'>
 		</form:form>
 	</body>
