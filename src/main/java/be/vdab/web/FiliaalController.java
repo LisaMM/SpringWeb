@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.vdab.entities.Filiaal;
+import be.vdab.exceptions.*;
 import be.vdab.services.FiliaalService;
 
 @Controller
@@ -64,6 +65,9 @@ class FiliaalController {
 				return "redirect:/";
 			} catch (IOException ex) {
 				logger.error("fouten bij opslaan foto" + ex.getStackTrace());
+			} catch (FiliaalMetDezeNaamBestaatAlException ex) {
+				bindingResult
+						.rejectValue("naam", "filiaalMetDezeNaamBestaatAl");
 			}
 		}
 		return "filialen/toevoegen";
@@ -90,16 +94,23 @@ class FiliaalController {
 		if (filiaal == null) {
 			return "redirect:/";
 		}
-		filiaalService.delete(id);
-		String filiaalFotoPad = servletContext.getRealPath("/images") + '/'
-				+ filiaal.getId() + ".jpg";
-		File file = new File(filiaalFotoPad);
-		if (file.exists()) {
-			file.delete();
+		try {
+			filiaalService.delete(id);
+			String filiaalFotoPad = servletContext.getRealPath("/images") + '/'
+					+ filiaal.getId() + ".jpg";
+			File file = new File(filiaalFotoPad);
+			if (file.exists()) {
+				file.delete();
+			}
+			redirectAttributes.addAttribute("id", id);
+			redirectAttributes.addAttribute("naam", filiaal.getNaam());
+			return ("redirect:/filialen/verwijderd");
+		} catch (FiliaalHeeftNogWerknemersException ex) {
+			redirectAttributes.addAttribute("id", id);
+			redirectAttributes.addAttribute("fout",
+					"Filiaal is niet verwijderd, het bevat nog werknemers");
+			return "redirect:/filialen";
 		}
-		redirectAttributes.addAttribute("id", id);
-		redirectAttributes.addAttribute("naam", filiaal.getNaam());
-		return ("redirect:/filialen/verwijderd");
 	}
 
 	@RequestMapping(value = "verwijderd", method = RequestMethod.GET, params = {
@@ -162,7 +173,12 @@ class FiliaalController {
 		if (bindingResult.hasErrors()) {
 			return "filialen/wijzigen";
 		}
-		filiaalService.update(filiaal);
-		return "redirect:/";
+		try {
+			filiaalService.update(filiaal);
+			return "redirect:/";
+		} catch (FiliaalMetDezeNaamBestaatAlException ex) {
+			bindingResult.rejectValue("naam", "filiaalMetDezeNaamBestaatAl");
+			return "filialen/wijzigen";
+		}
 	}
 }

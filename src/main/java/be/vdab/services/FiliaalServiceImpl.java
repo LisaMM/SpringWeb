@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import be.vdab.dao.FiliaalDAO;
 import be.vdab.entities.Filiaal;
+import be.vdab.exceptions.*;
 
 @Service
 class FiliaalServiceImpl implements FiliaalService {
@@ -17,6 +18,9 @@ class FiliaalServiceImpl implements FiliaalService {
 
 	@Override
 	public void create(Filiaal filiaal) {
+		if (filiaalDAO.findByNaam(filiaal.getNaam()) != null) {
+			throw new FiliaalMetDezeNaamBestaatAlException();
+		}
 		filiaalDAO.create(filiaal);
 	}
 
@@ -27,11 +31,18 @@ class FiliaalServiceImpl implements FiliaalService {
 
 	@Override
 	public void update(Filiaal filiaal) {
+		Filiaal anderFiliaal = filiaalDAO.findByNaam(filiaal.getNaam());
+		if (anderFiliaal != null && anderFiliaal.getId() != filiaal.getId()) {
+			throw new FiliaalMetDezeNaamBestaatAlException();
+		}
 		filiaalDAO.update(filiaal);
 	}
 
 	@Override
 	public void delete(long id) {
+		if (filiaalDAO.findAantalWerknemers(id) != 0) {
+			throw new FiliaalHeeftNogWerknemersException();
+		}
 		filiaalDAO.delete(id);
 	}
 

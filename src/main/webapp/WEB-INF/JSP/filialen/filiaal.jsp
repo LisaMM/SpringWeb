@@ -69,5 +69,8 @@
 				<div>Filiaal niet gevonden</div>
 			</c:otherwise>
 		</c:choose>
+		<c:if test="${not empty param.fout}">
+			<div class="fout">${param.fout}</div>
+		</c:if>
 	</body>
 </html>
