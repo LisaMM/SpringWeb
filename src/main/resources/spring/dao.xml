@@ -2,9 +2,22 @@
 <beans xmlns='http://www.springframework.org/schema/beans'
 	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
 	xmlns:context='http://www.springframework.org/schema/context'
+	xmlns:jee='http://www.springframework.org/schema/jee'
 	xsi:schemaLocation='http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context.xsd'>
-	<context:component-scan base-package='be.vdab.dao' />
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/jee
+	http://www.springframework.org/schema/jee/spring-jee.xsd'> 
+	<context:component-scan base-package='be.vdab.dao'/>
+	<context:property-placeholder location='classpath:/spring/database.properties'
+		ignore-unresolvable='true'/>
+	<bean id='dataSource' class='com.mchange.v2.c3p0.ComboPooledDataSource'
+		destroy-method='close'>
+		<property name='driverClass' value='${database.driverClass}'/>
+		<property name='jdbcUrl' value='${database.jdbcUrl}'/>
+		<property name='user' value='${database.user}'/>
+		<property name='password' value='${database.password}'/>
+		<property name='maxIdleTime' value='${database.maxIdleTime}'/>
+	</bean>
 </beans>
