@@ -1,6 +1,7 @@
 package be.vdab.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +25,12 @@ class FiliaalServiceImpl implements FiliaalService {
 		if (filiaalDAO.findByNaam(filiaal.getNaam()) != null) {
 			throw new FiliaalMetDezeNaamBestaatAlException();
 		}
-		filiaalDAO.create(filiaal);
+		filiaal.setId(filiaalDAO.save(filiaal).getId());
 	}
 
 	@Override
 	public Filiaal read(long id) {
-		return filiaalDAO.read(id);
+		return filiaalDAO.findOne(id);
 	}
 
 	@Override
@@ -39,13 +40,13 @@ class FiliaalServiceImpl implements FiliaalService {
 		if (anderFiliaal != null && anderFiliaal.getId() != filiaal.getId()) {
 			throw new FiliaalMetDezeNaamBestaatAlException();
 		}
-		filiaalDAO.update(filiaal);
+		filiaalDAO.save(filiaal);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public void delete(long id) {
-		Filiaal filiaal = filiaalDAO.read(id);
+		Filiaal filiaal = filiaalDAO.findOne(id);
 		if (! filiaal.getWerknemers().isEmpty()) {
 			throw new FiliaalHeeftNogWerknemersException();
 		}
@@ -54,17 +55,17 @@ class FiliaalServiceImpl implements FiliaalService {
 
 	@Override
 	public Iterable<Filiaal> findAll() {
-		return filiaalDAO.findAll();
+		return filiaalDAO.findAll(new Sort("naam"));
 	}
 
 	@Override
 	public Iterable<Filiaal> findByPostcodeBetween(int van, int tot) {
-		return filiaalDAO.findByPostcodeBetween(van, tot);
+		return filiaalDAO.findByAdresPostcodeBetweenOrderByNaamAsc(van, tot);
 	}
 
 	@Override
 	public long findAantalFilialen() {
-		return filiaalDAO.findAantalFilialen();
+		return filiaalDAO.count();
 	}
 
 }

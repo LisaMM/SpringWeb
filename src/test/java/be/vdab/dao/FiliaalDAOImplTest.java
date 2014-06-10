@@ -24,7 +24,6 @@ public class FiliaalDAOImplTest {
 	public void createFiliaalMetNaamDieNogNietVoorkomt() {
 		Filiaal filiaal = new Filiaal("Testnaam", true, BigDecimal.ONE, new Date(),
 				new Adres("Straat", "HuisNr", 1000, "Gemeente"));
-		filiaalDAO.create(filiaal);
+		filiaalDAO.save(filiaal);
 	}
-
 }

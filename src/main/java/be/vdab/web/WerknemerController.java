@@ -14,7 +14,7 @@ class WerknemerController {
 	
 	@Autowired
 	public WerknemerController(WerknemerService werknemerService) {
-	this.werknemerService = werknemerService;
+		this.werknemerService = werknemerService;
 	}
 
 	@RequestMapping
