@@ -2,14 +2,14 @@ package be.vdab.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import be.vdab.dao.FiliaalDAO;
 import be.vdab.entities.Filiaal;
 import be.vdab.exceptions.*;
 
 @Service
-@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+@Transactional(readOnly = true)
 class FiliaalServiceImpl implements FiliaalService {
 	private final FiliaalDAO filiaalDAO;
 	
@@ -45,7 +45,8 @@ class FiliaalServiceImpl implements FiliaalService {
 	@Override
 	@Transactional(readOnly = false)
 	public void delete(long id) {
-		if (filiaalDAO.findAantalWerknemers(id) != 0) {
+		Filiaal filiaal = filiaalDAO.read(id);
+		if (! filiaal.getWerknemers().isEmpty()) {
 			throw new FiliaalHeeftNogWerknemersException();
 		}
 		filiaalDAO.delete(id);
