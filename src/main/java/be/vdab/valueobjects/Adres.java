@@ -4,10 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.*;
+import javax.xml.bind.annotation.*;
 
 import be.vdab.constraints.Postcode;
 
 @Embeddable
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Adres implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@NotNull

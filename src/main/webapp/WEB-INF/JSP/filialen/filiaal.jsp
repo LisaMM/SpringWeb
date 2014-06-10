@@ -1,6 +1,7 @@
 <%@page contentType='text/html' pageEncoding='UTF-8' session='false'%>
 <%@taglib prefix='c' uri='http://java.sun.com/jsp/jstl/core'%>
 <%@taglib prefix='spring' uri='http://www.springframework.org/tags'%>
+<%@taglib prefix='form' uri='http://www.springframework.org/tags/form'%>
 <!doctype html>
 <html lang='nl'>
 	<head>
@@ -48,21 +49,17 @@
 						</dd>
 					</c:if>
 				</dl>
-				<c:url value="filialen/verwijderen" var="verwijderURL">
-					<c:param name="id" value="${filiaal.id}"/>
-				</c:url>
-				<form action="${verwijderURL}" method="post" id="verwijderform">
-					<input type="submit" value="verwijderen" id="verwijderknop">
-					<script>
-						document.getElementById('verwijderform').onsubmit = function() {
-							document.getElementById('verwijderknop').disabled=true;
-						};
-					</script>
-				</form>
-				<c:url value="/filialen/wijzigen" var="wijzigURL"/>
-				<form action="${wijzigURL}" method="get">
-					<input type="hidden" name="id" value="${filiaal.id}"/>
-					<input type="submit" value="Wijzigen">
+				<spring:url value='/filialen/{id}' var='verwijderURL'>
+					<spring:param name='id' value='${filiaal.id}'/>
+				</spring:url>
+				<form:form action='${verwijderURL}' method='delete' id='verwijderform'>
+					<input type='submit' value='Verwijderen' id='verwijderknop'>
+				</form:form>
+				<spring:url value='/filialen/{id}/wijzigen' var='wijzigURL'>
+					<spring:param name='id' value='${filiaal.id}'/>
+				</spring:url>
+				<form action='${wijzigURL}' method='get'>
+					<input type='submit' value='Wijzigen'>
 				</form>
 			</c:when>
 			<c:otherwise>

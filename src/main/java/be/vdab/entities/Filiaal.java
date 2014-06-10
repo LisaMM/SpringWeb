@@ -7,14 +7,18 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.xml.bind.annotation.*;
 
 import org.springframework.format.annotation.*;
 import org.springframework.format.annotation.NumberFormat.Style;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import be.vdab.valueobjects.Adres;
 
 @Entity
 @Table(name = "filialen")
+@XmlRootElement
 public class Filiaal implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -37,6 +41,8 @@ public class Filiaal implements Serializable {
 	@Embedded
 	private Adres adres;
 	@OneToMany(mappedBy = "filiaal")
+	@XmlTransient
+	@JsonIgnore
 	private Set<Werknemer> werknemers;
 
 	public Filiaal() {
