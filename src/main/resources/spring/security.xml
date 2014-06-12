@@ -40,4 +40,5 @@
 					where gebruikers.naam=?'/>
 		</authentication-provider>
 	</authentication-manager>
+	<global-method-security pre-post-annotations='enabled'/>
 </beans:beans>
