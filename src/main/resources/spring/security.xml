@@ -26,7 +26,18 @@
 			<password-encoder hash="sha">
 				<salt-source user-property='username'/>
 			</password-encoder>
-			<jdbc-user-service data-source-ref="dataSource"/>
+			<jdbc-user-service data-source-ref='dataSource'
+				users-by-username-query=
+					'select naam as username, paswoord as password, actief as enabled
+					from gebruikers
+					where naam = ? '
+				authorities-by-username-query=
+					'select gebruikers.naam as username, rollen.naam as authorities
+					from gebruikers inner join gebruikersrollen
+					on gebruikers.id = gebruikersrollen.gebruikerid
+					inner join rollen
+					on rollen.id = gebruikersrollen.rolid
+					where gebruikers.naam=?'/>
 		</authentication-provider>
 	</authentication-manager>
 </beans:beans>
