@@ -34,8 +34,19 @@
 		<param-value>
 			classpath:/spring/dao.xml
 			classpath:/spring/services.xml
+			classpath:/spring/security.xml
 		</param-value>
 	</context-param>
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<servlet-name>springDispatcher</servlet-name>
+	</filter-mapping>
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<filter-class>

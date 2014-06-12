@@ -15,6 +15,7 @@
 	<mvc:resources mapping='/styles/**' location='/styles/*' />
 	<mvc:resources mapping='/scripts/**' location='/scripts/*' />
 	<mvc:view-controller path="/info" view-name="info"/>
+	<mvc:view-controller path='/login' view-name='login'/>
 	<mvc:interceptors>
 		<bean class='org.springframework.web.servlet.i18n.LocaleChangeInterceptor'/>
 	</mvc:interceptors>

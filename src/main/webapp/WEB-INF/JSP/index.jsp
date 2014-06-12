@@ -35,6 +35,10 @@
 				<li><a href="<c:url value='/leningen/toevoegen'/>">
 					<fmt:message key="leningToevoegen"/>
 				</a></li>
+				<li><a href="<c:url value='/login'/>">
+					<fmt:message key='aanmelden'/></a></li>
+				<li><a href="<c:url value='/j_spring_security_logout'/>">
+					<fmt:message key='afmelden'/></a></li>
 			</ul>
 		</nav>
 		<jsp:include page="/WEB-INF/JSP/taalkeuze.jsp"/>
