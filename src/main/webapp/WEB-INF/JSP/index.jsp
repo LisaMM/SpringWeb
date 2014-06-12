@@ -43,8 +43,12 @@
 						<fmt:message key='aanmelden'/></a></li>
 				</security:authorize>
 				<security:authorize access='isAuthenticated()'>
+					<security:authentication property='name' var='userName'/>
 					<li><a href="<c:url value='/j_spring_security_logout'/>">
-						<fmt:message key='afmelden'/></a></li>
+						<fmt:message key='afmelden'>
+							<fmt:param value='${userName}'/>
+						</fmt:message>
+					</a></li>
 				</security:authorize>
 			</ul>
 		</nav>
