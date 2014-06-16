@@ -3,48 +3,45 @@ package be.vdab.services;
 import be.vdab.dao.FiliaalDAO;
 import be.vdab.entities.Filiaal;
 import be.vdab.exceptions.*;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.javamail.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 @Transactional(readOnly = true)
 class FiliaalServiceImpl implements FiliaalService {
     private final FiliaalDAO filiaalDAO;
-    private final JavaMailSender mailSender;
+    private final MailService mailService;
     private final Logger logger = 
         LoggerFactory.getLogger(FiliaalServiceImpl.class);
 
     @Autowired
-    public FiliaalServiceImpl (FiliaalDAO filiaalDAO, 
-        JavaMailSender mailSender) {
+    public FiliaalServiceImpl (FiliaalDAO filiaalDAO, MailService mailService) {
         this.filiaalDAO = filiaalDAO;
-        this.mailSender = mailSender;
+        this.mailService = mailService;
     }
 
     @Override
     @Transactional(readOnly = false)
     public void create(Filiaal filiaal) {
-        if (filiaalDAO.findByNaam(filiaal.getNaam()) != null) {
-                throw new FiliaalMetDezeNaamBestaatAlException();
-        }
-        filiaal.setId(filiaalDAO.save(filiaal).getId());
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
-            helper.setTo("kukuxumusu0@hotmail.com");
-            helper.setSubject("Nieuw filiaal");
-            helper.setText("Het filiaal <strong>" + filiaal.getNaam()
-                + "</strong> werd toegevoegd", true);
-            mailSender.send(message);
-        } catch (MessagingException ex) {
-            logger.error("kan mail niet versturen", ex);
+            filiaalDAO.save(filiaal);
+            mailService.zendMail("tikHiereenEmailAdres", "Nieuw filiaal",
+                "Het filiaal <strong>" + filiaal.getNaam() +
+                "</strong> werd toegevoegd.<br>Je kan <a href='"+
+                ServletUriComponentsBuilder.fromCurrentContextPath().path(
+                "/filialen/{id}/wijzigen").buildAndExpand(filiaal.getId()).toUri() +
+                "'>hier</a> het filiaal wijzigen");
+        } catch (DataIntegrityViolationException ex) {
+            if (filiaalDAO.findByNaam(filiaal.getNaam()) != null) {
+                throw new FiliaalMetDezeNaamBestaatAlException();
+            }
+            throw ex;
         }
     }
 
