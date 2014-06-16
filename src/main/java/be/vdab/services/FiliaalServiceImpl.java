@@ -53,11 +53,11 @@ class FiliaalServiceImpl implements FiliaalService {
     @Override
     @Transactional(readOnly = false)
     public void update(Filiaal filiaal) {
-            Filiaal anderFiliaal = filiaalDAO.findByNaam(filiaal.getNaam());
-            if (anderFiliaal != null && anderFiliaal.getId() != filiaal.getId()) {
-                    throw new FiliaalMetDezeNaamBestaatAlException();
-            }
-            filiaalDAO.save(filiaal);
+        Filiaal anderFiliaal = filiaalDAO.findByNaam(filiaal.getNaam());
+        if (anderFiliaal != null && anderFiliaal.getId() != filiaal.getId()) {
+                throw new FiliaalMetDezeNaamBestaatAlException();
+        }
+        filiaalDAO.save(filiaal);
     }
 
     @Override

@@ -9,10 +9,10 @@ class AdresForm extends Adres {
 	}
 
 	AdresForm(Adres adres) {
-		setStraat(adres.getStraat());
-		setHuisNr(adres.getHuisNr());
-		setPostcode(adres.getPostcode());
-		setGemeente(adres.getGemeente());
+            setStraat(adres.getStraat());
+            setHuisNr(adres.getHuisNr());
+            setPostcode(adres.getPostcode());
+            setGemeente(adres.getGemeente());
 	}
 
 	@Override

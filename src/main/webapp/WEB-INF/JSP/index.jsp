@@ -5,16 +5,16 @@
 <!doctype html>
 <html lang='${pageContext.response.locale.language}'>
 	<head>
-		<title><fmt:message key='menu'/></title>
-		<link rel='stylesheet'
-			href='${pageContext.servletContext.contextPath}/styles/default.css'>
-			<c:if test="${not empty kleur}">
-				<style>
-					body {
-						background-color: ${kleur};
-					}
-				</style>
-			</c:if>
+            <title><fmt:message key='menu'/></title>
+            <link rel='stylesheet'
+                href='${pageContext.servletContext.contextPath}/styles/default.css'>
+            <c:if test="${not empty kleur}">
+                    <style>
+                            body {
+                                    background-color: ${kleur};
+                            }
+                    </style>
+            </c:if>
 	</head>
 	<body>
 		<nav>

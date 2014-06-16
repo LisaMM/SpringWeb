@@ -9,12 +9,12 @@
 		<link rel='stylesheet'
 			href='${pageContext.servletContext.contextPath}/styles/default.css'>
 		<style>
-			form, form input {
-				display:inline; /* de twee forms naast elkaar */
-			}
-			form {
-				margin-right:5px;
-			}
+                    form, form input {
+                            display:inline; /* de twee forms naast elkaar */
+                    }
+                    form {
+                            margin-right:5px;
+                    }
 		</style>
 	</head>
 	<body>
