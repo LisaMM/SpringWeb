@@ -1,9 +1,5 @@
 package be.vdab.services;
 
-import be.vdab.dao.FiliaalDAO;
-import be.vdab.entities.Filiaal;
-import be.vdab.exceptions.*;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -12,13 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import be.vdab.dao.FiliaalDAO;
+import be.vdab.entities.Filiaal;
+import be.vdab.exceptions.FiliaalHeeftNogWerknemersException;
+import be.vdab.exceptions.FiliaalMetDezeNaamBestaatAlException;
+
 @Service
 @Transactional(readOnly = true)
 class FiliaalServiceImpl implements FiliaalService {
     private final FiliaalDAO filiaalDAO;
     private final MailService mailService;
-    private final Logger logger = 
-        LoggerFactory.getLogger(FiliaalServiceImpl.class);
 
     @Autowired
     public FiliaalServiceImpl (FiliaalDAO filiaalDAO, MailService mailService) {
